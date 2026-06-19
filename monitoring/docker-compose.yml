@@ -10,7 +10,7 @@ services:
       - prometheus_data:/prometheus
     command:
       - "--config.file=/etc/prometheus/prometheus.yml"
-      - "--storage.tsbd.path=/prometheus"
+      - "--storage.tsdb.path=/prometheus"
       - "--web.enable-lifecycle"
     restart: unless-stopped
 
@@ -20,10 +20,13 @@ services:
     container_name: alertmanager
     ports:
       - "9093:9093"
+    environment:
+      - GMAIL_APP_PASSWORD=${GMAIL_APP_PASSWORD}
     volumes:
       - ./alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml
     command:
       - "--config.file=/etc/alertmanager/alertmanager.yml"
+      - "--cluster.advertise-address=0.0.0.0:9093"
     restart: unless-stopped
 
 
